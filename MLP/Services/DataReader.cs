@@ -1,4 +1,5 @@
 ﻿using MLP.Entities.Glass;
+using MLP.Entities.Node;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -46,6 +47,46 @@ namespace MLP.Services
                 }
             }
 
+            return resultList;
+        }
+
+        public List<Node> ReadNodeWeightData(string fileLocation)
+        {
+            var resultList = new List<Node>();
+            Node node = null;
+
+            using (var reader = new StreamReader(fileLocation))
+            {
+                while (!reader.EndOfStream)
+                {
+                    var line = reader.ReadLine();
+                    var values = line.Split(',');
+
+                    var value = values[0];
+
+                    if (value == "SigmoidNode")
+                    {
+                        if (node != null)
+                            resultList.Add(node);
+
+                        node = new Node();
+                        node.Name = string.Concat(values[0], values[1]);
+                    }
+                    else
+                    {
+                        if (node.Weights == null)
+                            node.Weights = new List<AttributeWeight>();
+
+                        node.Weights.Add(new AttributeWeight
+                        {
+                            AttributeName = values[0],
+                            Value = float.Parse(values[1], CultureInfo.InvariantCulture.NumberFormat),
+                        });
+                    }
+                }
+            }
+
+            resultList.Add(node);
             return resultList;
         }
     }
