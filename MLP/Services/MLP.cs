@@ -10,6 +10,7 @@ namespace MLP.Services
     {
         private List<Glass> _data;
         private List<Node> _firstLayerNodes;
+        private List<Node> _secondLayerNodes;
 
         public MLP()
         {
@@ -20,6 +21,7 @@ namespace MLP.Services
             _data = new Normalizer().NormalizeData(_data, -1, 1);
 
             _firstLayerNodes = dataReader.ReadNodeWeightData(string.Concat(projectDirectory, "\\Data\\input_weights.data"));
+            _secondLayerNodes = dataReader.ReadNodeWeightData(string.Concat(projectDirectory, "\\Data\\hidden_layer_weights.data"));
         }
     }
 }
