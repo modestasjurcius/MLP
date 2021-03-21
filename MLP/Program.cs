@@ -9,6 +9,8 @@ namespace MLP
             Console.WriteLine("MLP starting...");
 
             var app = new Services.MLP();
+
+            Console.WriteLine("MLP ending...");
         }
     }
 }
