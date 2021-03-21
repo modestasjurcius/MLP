@@ -1,5 +1,6 @@
 ﻿using MLP.Entities.Glass;
 using MLP.Entities.Node;
+using MLP.Entities.Result;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -10,6 +11,23 @@ namespace MLP.Services
 {
     public class DataReader
     {
+        public void WriteResults(List<Results> results, string fileLocation)
+        {
+            using (var w = new StreamWriter(fileLocation))
+            {
+                var headerLine = "Original,Predicted";
+                w.WriteLine(headerLine);
+                w.Flush();
+
+                foreach (var res in results)
+                {
+                    var line = string.Join(",", res.Original, res.Predicted);
+                    w.WriteLine(line);
+                    w.Flush();
+                }
+            }
+        }
+
         public void WriteGlassTypeNameToFile(string fileLocation)
         {
             string[] lines = File.ReadAllLines(fileLocation);

@@ -1,5 +1,6 @@
 ﻿using MLP.Entities.Glass;
 using MLP.Entities.Node;
+using MLP.Entities.Result;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,6 +21,8 @@ namespace MLP.Services
         private List<LayerValues> _secondLayerValues;
         private List<LayerValues> _outputLayerValues;
 
+        private List<Results> _resultList;
+
         public MLP()
         {
             string projectDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
@@ -39,6 +42,9 @@ namespace MLP.Services
             _firstLayerValues = CalculateFirstLayer();
             _secondLayerValues = CalculateSecondLayer();
             _outputLayerValues = CalculateOutput();
+
+            _resultList = GenerateResults();
+            dataReader.WriteResults(_resultList, string.Concat(projectDirectory, "\\Data\\results.data"));
         }
 
         private List<LayerValues> CalculateFirstLayer()
@@ -145,6 +151,48 @@ namespace MLP.Services
                     var resultValue = results.Find(r => r.Name == string.Concat(node.Name, ".a"));
                     resultValue.Values.Add(final);
                 }
+            }
+
+            return results;
+        }
+
+        public List<Results> GenerateResults()
+        {
+            var results = new List<Results>();
+
+            var templateObj = _outputLayerValues.FirstOrDefault();
+
+            int index = 0;
+            foreach (var temp in templateObj.Values)
+            {
+                float max = 0;
+                int maxId = 0;
+                foreach (var value in _outputLayerValues)
+                {
+                    var val = value.Values[index];
+                    if (val > max)
+                    {
+                        max = val;
+
+                        var maxNodeName = value.Name.Replace("SigmoidNode", "").Replace(".a", "");
+                        maxId = int.Parse(maxNodeName);
+                    }
+                }
+
+                if (maxId < 3)
+                    maxId++;
+                else
+                    maxId += 2;
+
+
+                var originalDataObject = _data[index];
+                var res = new Results();
+                res.DataId = originalDataObject.Id;
+                res.Original = originalDataObject.TypeName;
+                res.Predicted = ((GlassTypeNames)maxId).ToString();
+
+                results.Add(res);
+                index++;
             }
 
             return results;
