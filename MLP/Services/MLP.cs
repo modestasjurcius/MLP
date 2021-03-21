@@ -190,6 +190,7 @@ namespace MLP.Services
                 res.DataId = originalDataObject.Id;
                 res.Original = originalDataObject.TypeName;
                 res.Predicted = ((GlassTypeNames)maxId).ToString();
+                res.MaxValue = max;
 
                 results.Add(res);
                 index++;
