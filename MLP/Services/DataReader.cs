@@ -4,11 +4,41 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace MLP.Services
 {
     public class DataReader
     {
+        public void WriteGlassTypeNameToFile(string fileLocation)
+        {
+            string[] lines = File.ReadAllLines(fileLocation);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string line = lines[i];
+                if (line.Contains(","))
+                {
+                    var split = line.Split(',');
+                    if (split.ElementAtOrDefault(11) == null)
+                    {
+                        Array.Resize(ref split, split.Length + 1);
+                        if (i == 0)
+                        {
+                            split.SetValue("TypeName", 11);// [11] = "TypeName
+                        }
+                        else
+                        {
+                            var type = int.Parse(split[10]);
+                            split.SetValue(((GlassTypeNames)type).ToString(), 11);
+                        }
+                        line = string.Join(",", split);
+                        lines[i] = line;
+                    }
+                }
+            }
+            File.WriteAllLines(fileLocation, lines);
+        }
+
         public List<Glass> ReadData(string fileLocation, List<int> idList)
         {
             var resultList = new List<Glass>();
