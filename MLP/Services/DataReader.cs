@@ -39,7 +39,7 @@ namespace MLP.Services
             File.WriteAllLines(fileLocation, lines);
         }
 
-        public List<Glass> ReadData(string fileLocation, List<int> idList)
+        public List<Glass> ReadData(string fileLocation)
         {
             var resultList = new List<Glass>();
             var isHeaderLine = true;
@@ -55,29 +55,25 @@ namespace MLP.Services
                         isHeaderLine = false;
                     else
                     {
-                        var id = int.Parse(values[0]);
-                        if (idList.Contains(id))
+                        var type = int.Parse(values[10]);
+
+                        var obj = new Glass
                         {
-                            var type = int.Parse(values[10]);
+                            Id = int.Parse(values[0]),
+                            RefractiveIndex = float.Parse(values[1], CultureInfo.InvariantCulture.NumberFormat),
+                            Sodium = float.Parse(values[2], CultureInfo.InvariantCulture.NumberFormat),
+                            Magnesium = float.Parse(values[3], CultureInfo.InvariantCulture.NumberFormat),
+                            Aluminum = float.Parse(values[4], CultureInfo.InvariantCulture.NumberFormat),
+                            Silicon = float.Parse(values[5], CultureInfo.InvariantCulture.NumberFormat),
+                            Potassium = float.Parse(values[6], CultureInfo.InvariantCulture.NumberFormat),
+                            Calcium = float.Parse(values[7], CultureInfo.InvariantCulture.NumberFormat),
+                            Barium = float.Parse(values[8], CultureInfo.InvariantCulture.NumberFormat),
+                            Iron = float.Parse(values[9], CultureInfo.InvariantCulture.NumberFormat),
+                            Type = type,
+                            TypeName = ((GlassTypeNames)type).ToString(),
+                        };
 
-                            var obj = new Glass
-                            {
-                                Id = id,
-                                RefractiveIndex = float.Parse(values[1], CultureInfo.InvariantCulture.NumberFormat),
-                                Sodium = float.Parse(values[2], CultureInfo.InvariantCulture.NumberFormat),
-                                Magnesium = float.Parse(values[3], CultureInfo.InvariantCulture.NumberFormat),
-                                Aluminum = float.Parse(values[4], CultureInfo.InvariantCulture.NumberFormat),
-                                Silicon = float.Parse(values[5], CultureInfo.InvariantCulture.NumberFormat),
-                                Potassium = float.Parse(values[6], CultureInfo.InvariantCulture.NumberFormat),
-                                Calcium = float.Parse(values[7], CultureInfo.InvariantCulture.NumberFormat),
-                                Barium = float.Parse(values[8], CultureInfo.InvariantCulture.NumberFormat),
-                                Iron = float.Parse(values[9], CultureInfo.InvariantCulture.NumberFormat),
-                                Type = type,
-                                TypeName = ((GlassTypeNames)type).ToString(),
-                            };
-
-                            resultList.Add(obj);
-                        }
+                        resultList.Add(obj);
                     }
                 }
             }
