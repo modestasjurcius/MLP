@@ -75,6 +75,7 @@ namespace MLP.Services
                             resultList.Add(node);
 
                         node = new Node();
+                        node.NodeId = int.Parse(values[1]);
                         node.Name = string.Concat(values[0], values[1]);
                     }
                     else

@@ -2,10 +2,9 @@
 
 namespace MLP.Entities.Node
 {
-    public class Node
+    public class LayerValues
     {
-        public int NodeId { get; set; }
         public string Name { get; set; }
-        public List<AttributeWeight> Weights { get; set; }
+        public List<float> Values { get; set; }
     }
 }
